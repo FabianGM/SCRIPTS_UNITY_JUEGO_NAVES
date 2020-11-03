@@ -5,18 +5,25 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-
-
     public float speed;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public Transform shootOrigin;
+    public GameObject shootPrefab;
+    public float xMin, xMax;
 
-    // Update is called once per frame
     void Update()
     {
-        transform.Translate(Input.GetAxis("Horizontal")* speed *Time.deltaTime, Input.GetAxis("Vertical")* speed * Time.deltaTime, transform.position.z);      
+
+        //movimiento w,d dinámico para que valga con varios botones
+        transform.Translate(Input.GetAxis("Horizontal") * speed * Time.deltaTime,
+            transform.position.z, transform.position.z);
+        //Establezco un rango para limitar por donde se mueva el pj
+        float x = Mathf.Clamp(transform.position.x, xMin, xMax);
+        transform.position = new Vector3(x,0,0);
+        //Poner un botón para el Shoot tanto para pc, android, etc
+        if (Input.GetButtonDown("Shoot")){
+            // Se crea la bala cada vez que aplasto espacio con todo y script mover
+            Instantiate(shootPrefab, shootOrigin, false);
+        }
+
     }
 }
